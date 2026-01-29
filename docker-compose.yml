@@ -1,0 +1,39 @@
+services:
+  db:
+    image: mariadb:10.6
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: glpi
+      MYSQL_USER: glpi
+      MYSQL_PASSWORD: glpi
+    volumes:
+      - db_data:/var/lib/mysql
+
+  glpi: 
+    image: diouxx/glpi
+    ports: 
+      - "8080:80"
+    environment:
+      TIMEZONE: America/Recife
+      depends_on:
+        - db
+
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - "8085:8085" # UI do mailhog
+      - "1025:1025" # SMTP
+
+  app:
+    build: ./app
+    ports:
+      - "5000:5000"
+    environment:
+      SMTP_HOST: mailhog
+      SMTP_PORT: "1025"
+      FROM_EMAIL: "adm@lab.local"
+
+      # app
+      BASE_URL: "http://localhost:5000"
+      APP_DB: "/data/app.db"
+
