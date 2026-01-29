@@ -37,3 +37,17 @@ services:
       BASE_URL: "http://localhost:5000"
       APP_DB: "/data/app.db"
 
+      #GLPI
+      GLPI_BASE_URL: "http://glpi/apirest.php"
+      GLPI_APP_TOKEN: ""
+      GLPI_USER_TOKEN: ""
+    volumes:
+      - app_data:/data
+
+    depends_on:
+      - glpi
+      - mailhog
+
+volumes: 
+  db_data:
+  app_data:
